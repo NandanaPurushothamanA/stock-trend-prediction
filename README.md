@@ -1,6 +1,6 @@
 # Stock Market Trend Prediction
 
-Predicts whether a stock's closing price will go **UP or DOWN on the next trading day**, using historical price data for **NIFTY 50** stocks. Engineers technical features with pandas, explores them with Seaborn, and compares three classification models against a simple baseline.
+Tests whether a stock's closing price can be predicted to go **UP or DOWN on the next trading day**, using **250,000+ daily records of 49 NIFTY 50 stocks (2005–2026)**. Engineers 13 technical features with pandas, explores them with Seaborn, and compares three classification models against a simple baseline using a time-based split.
 
 **Tech stack:** Python · pandas · NumPy · scikit-learn · Seaborn · Matplotlib · yfinance
 
@@ -33,6 +33,22 @@ stock-trend-prediction/
 2. Start Jupyter: `jupyter notebook`, open `stock_trend_prediction.ipynb`, then **Kernel → Restart & Run All**
 3. The first run downloads NIFTY 50 data from 2005 (a few minutes) and caches it in `data/`. For a quicker run, set `START_DATE = "2015-01-01"` in the first code cell.
 
+## Results
+
+Data: **251,229 rows** after cleaning and feature engineering. **Train:** 198,805 rows (before June 2022) · **Test:** 52,424 rows (June 2022 onwards).
+
+| Model | Accuracy | Precision | Recall | F1-score |
+|---|---|---|---|---|
+| **Baseline (always predict UP)** | **0.511** | 0.511 | 1.000 | **0.676** |
+| Logistic Regression | 0.509 | 0.511 | 0.892 | 0.650 |
+| SVM (Linear) | 0.510 | 0.511 | 0.891 | 0.650 |
+| Random Forest | 0.508 | 0.512 | 0.751 | 0.609 |
+
+### Key finding
+**None of the models beat the simple baseline.** Every feature has a correlation below 0.02 with next-day direction, and the models mostly learn to predict "UP" (stocks rose on 50.8% of days).
+
+This is consistent with next-day price movements being close to random: past prices and common technical indicators alone carry almost no predictive signal. It also shows why the evaluation setup matters. With a random (shuffled) split or no baseline, similar models can appear far more accurate than they really are.
+
 ### Feature correlation
 ![Correlation heatmap](images/correlation_heatmap.png)
 
@@ -46,5 +62,10 @@ stock-trend-prediction/
 
 - **Time-based split, not a random split:** shuffling would let the model train on future prices and test on the past, which inflates scores. Real predictions only ever use past data.
 - **Baseline comparison:** daily stock direction is close to random, so a model is only useful if it beats "always predict UP". Accuracy around 50–55% is normal for this problem; anything much higher usually means data leakage.
+
+## Possible next steps
+- Predict longer horizons (e.g. 5- or 20-day direction), where trends may be more predictable
+- Add market-wide and external features (NIFTY index, sector performance, news sentiment)
+- Try gradient boosting (XGBoost / LightGBM) and walk-forward validation
 - **Scaling for LR and SVM only:** both are sensitive to feature scale; Random Forest is not.
 - **Ratio-based features:** features like price/moving-average are comparable across stocks with very different price levels.
