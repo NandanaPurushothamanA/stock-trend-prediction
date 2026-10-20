@@ -33,17 +33,6 @@ stock-trend-prediction/
 2. Start Jupyter: `jupyter notebook`, open `stock_trend_prediction.ipynb`, then **Kernel → Restart & Run All**
 3. The first run downloads NIFTY 50 data from 2005 (a few minutes) and caches it in `data/`. For a quicker run, set `START_DATE = "2015-01-01"` in the first code cell.
 
-## Results
-
-<!-- After running the notebook, copy the numbers from images/model_results.csv into this table -->
-
-| Model | Accuracy | Precision | Recall | F1-score |
-|---|---|---|---|---|
-| Baseline (majority class) | | | | |
-| Logistic Regression | | | | |
-| SVM (Linear) | | | | |
-| Random Forest | | | | |
-
 ### Feature correlation
 ![Correlation heatmap](images/correlation_heatmap.png)
 
